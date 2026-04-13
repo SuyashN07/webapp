@@ -35,6 +35,9 @@ pipeline {
         }
         stage('Deployment') {
             agent { label 'slave_01' }
+            options {
+                skipDefaultCheckout()
+            }
             steps {
                 sh '/home/lubuntu/deployment/deployment.sh'
             }
