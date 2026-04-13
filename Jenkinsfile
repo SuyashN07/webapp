@@ -4,6 +4,9 @@ pipeline {
     stages {
         stage('Build') {
             agent any
+            tools {
+                git 'git'
+            }
             steps {
                 bat 'mvn -B -DskipTests clean package'
             }
@@ -18,6 +21,9 @@ pipeline {
 //         }
         stage('Test') { 
             agent any
+            tools {
+                git 'git'
+            }
             steps {
                 bat 'mvn test' 
             }
@@ -29,12 +35,18 @@ pipeline {
         }
         stage('SonarQube Analysis') {
             agent any
+            tools {
+                git 'git'
+            }
             steps {
                 bat 'mvn clean install sonar:sonar -Dsonar.host.url=http://localhost:9000 -Dsonar.token=sqa_c01df2e54ff5ebdb27de38d05c45d5162c8a1c2c'
             }
         }
         stage('Deployment') {
             agent { label 'slave_01' }
+            tools {
+                git 'git-linux'
+            }
             options {
                 skipDefaultCheckout()
             }
