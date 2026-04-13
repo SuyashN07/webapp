@@ -25,10 +25,15 @@ pipeline {
                 }
             }
         }
-//        stage('Sonar-Report') {
-//            steps {
-//                bat 'mvn clean install sonar:sonar -Dsonar.host.url=http://localhost:9000 -Dsonar.analysis.mode=publish'
-//            }
-//        }
+        stage('SonarQube Analysis') {
+            steps {
+                bat 'mvn clean install sonar:sonar -Dsonar.host.url=http://localhost:9000 -Dsonar.token=sqa_c01df2e54ff5ebdb27de38d05c45d5162c8a1c2c'
+            }
+        }
+        stage('Deployment') {
+            steps {
+                sh '/home/lubuntu/deployment/deployment.sh'
+            }
+        }
     }
 }
