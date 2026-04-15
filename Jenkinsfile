@@ -135,16 +135,21 @@ pipeline {
                     } else {
                         bat '''
                         if not exist deploy mkdir deploy
-                        copy target\\*.jar deploy\\%APP_NAME%
+
+                        echo Copying correct jar...
+                        copy target\\java-webapp-1.0.jar deploy\\app.jar /Y
 
                         echo Stopping old app...
                         taskkill /F /IM java.exe >nul 2>&1
 
                         echo Starting app...
-                        start /B java -jar deploy\\%APP_NAME% > deploy\\app.log 2>&1
+                        cmd /c "start \"\" java -jar deploy\\app.jar > deploy\\app.log 2>&1"
 
-                        timeout /t 5 >nul
-                        netstat -an | find "%PORT%" || (echo App failed to start & exit /b 1)
+                        echo Waiting...
+                        ping 127.0.0.1 -n 6 >nul
+
+                        echo Checking port...
+                        netstat -an | find "9999" >nul || (echo App failed to start & exit /b 1)
                         '''
                     }
                 }
